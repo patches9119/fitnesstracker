@@ -11,16 +11,6 @@ router.post("/api/workouts", ({ body }, res) => {
     });
 });
 
-// router.post("/api/transaction/bulk", ({ body }, res) => {
-//   Transaction.insertMany(body)
-//     .then(dbTransaction => {
-//       res.json(dbTransaction);
-//     })
-//     .catch(err => {
-//       res.status(400).json(err);
-//     });
-// });
-
 router.get("/api/workouts", (req, res) => {
   Workout.find({})
     .sort({ date: -1 })
@@ -31,6 +21,35 @@ router.get("/api/workouts", (req, res) => {
       res.status(400).json(err);
     });
 });
+
+router.get("/api/workouts/range", (req, res) => {
+  Workout.find({})
+    .sort({ date: -1 })
+    .then(dbWorkouts => {
+      res.json(dbWorkouts);
+    })
+    .catch(err => {
+      res.status(400).json(err);
+    });
+});
+
+router.put("/api/workouts/:id", ({body, params}, res) => {
+  const useid = params.id;
+  Workout.find({ _id: useid })
+    .then(dbWorkouts => {
+      console.log(body);
+      var currentWorkout = dbWorkouts[0].exercises;
+      currentWorkout.push(body);
+      dbWorkouts.Workout.findbyIdAndUpdate(useid, {exercises: currentWorkout}, function(error) {
+        if(error) throw error;
+      })
+      res.json(dbWorkouts[0].exercises);
+    })
+    .catch(err => {
+      res.status(400).json(err);
+    });
+});
+
 
 
 
