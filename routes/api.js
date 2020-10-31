@@ -1,7 +1,9 @@
 const router = require("express").Router();
 const Workout = require("../models/workout.js");
 
-router.post("/api/workouts", ({ body }, res) => {
+router.post("/api/workouts", ({
+  body
+}, res) => {
   Workout.create(body)
     .then(dbWorkouts => {
       res.json(dbWorkouts);
@@ -13,7 +15,9 @@ router.post("/api/workouts", ({ body }, res) => {
 
 router.get("/api/workouts", (req, res) => {
   Workout.find({})
-    .sort({ date: -1 })
+    .sort({
+      date: -1
+    })
     .then(dbWorkouts => {
       res.json(dbWorkouts);
     })
@@ -24,7 +28,9 @@ router.get("/api/workouts", (req, res) => {
 
 router.get("/api/workouts/range", (req, res) => {
   Workout.find({})
-    .sort({ date: -1 })
+    .sort({
+      date: -1
+    })
     .then(dbWorkouts => {
       res.json(dbWorkouts);
     })
@@ -33,15 +39,21 @@ router.get("/api/workouts/range", (req, res) => {
     });
 });
 
-router.put("/api/workouts/:id", ({body, params}, res) => {
+router.put("/api/workouts/:id", ({
+  body,
+  params
+}, res) => {
   const useid = params.id;
-  Workout.find({ _id: useid })
+  Workout.find({
+      _id: useid
+    })
     .then(dbWorkouts => {
-      console.log(body);
       var currentWorkout = dbWorkouts[0].exercises;
       currentWorkout.push(body);
-      dbWorkouts.Workout.findbyIdAndUpdate(useid, {exercises: currentWorkout}, function(error) {
-        if(error) throw error;
+      Workout.findByIdAndUpdate(useid, {
+        exercises: currentWorkout
+      }, (error) => {
+        if (error) throw error;
       })
       res.json(dbWorkouts[0].exercises);
     })
